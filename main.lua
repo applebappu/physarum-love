@@ -90,6 +90,19 @@ InitMatrix = function(matrix)
 	end
 end
 
+SpreadPlasmodium = function()
+	for i = 1, map.board_size.x do
+		for j = 1, map.board_size.y do
+			if physarum.body_table[i][j] == "p" then
+				if map.map_table[i - 1][j - 1] ~= "#" and physarum.energy >= 1 then
+					physarum.body_table[i - 1][j - 1] = "p"
+					physarum.energy = physarum.energy - 1
+				end
+			end
+		end
+	end
+end
+
 -- MAIN CODE --
 InitMatrix(physarum.body_table)
 InitMatrix(food.location_table)
