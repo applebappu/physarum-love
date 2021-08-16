@@ -80,6 +80,12 @@ map = {
 	end
 }
 
+directions = {
+	{-1, -1}, {0, -1}, {1, -1},
+	{-1, 0},  {0, 0},  {1, 0},
+	{1, -1},  {0 , 1}, {1, 1}
+}
+
 InitMatrix = function(matrix)
 	local m = matrix
 	for i = 1, map.board_size.x do
@@ -90,17 +96,41 @@ InitMatrix = function(matrix)
 	end
 end
 
-SpreadPlasmodium = function()
+CheckSurroundings = function(test_char)
+	local test_table = {}
+	local results_table = {}
+	
+	if test_char == "#" then
+		test_table = map.map_table
+	elseif test_char == "%" then
+		test_table = food.location_table
+	elseif test_char == "p" then
+		test_table = physarum.body_table
+	end
+
 	for i = 1, map.board_size.x do
 		for j = 1, map.board_size.y do
 			if physarum.body_table[i][j] == "p" then
-				if map.map_table[i - 1][j - 1] ~= "#" and physarum.energy >= 1 then
-					physarum.body_table[i - 1][j - 1] = "p"
-					physarum.energy = physarum.energy - 1
+				for n = 1, #directions do
+					local target_x = directions[n][1]
+					local target_y = directions[n][2]
+
+					if test_table[i + target_x][j + target_y] ~= test_char then
+						results_table[n] = false
+					else
+						results_table[n] = true
+					end
 				end
 			end
 		end
 	end
+	return results_table
+end
+
+SpreadPlasmodium = function()
+	-- check surroundings for walls, food, and body parts.
+	-- spread with a high priority onto food, then empty spaces, not onto walls or body
+	CheckSurroundings("#")
 end
 
 -- MAIN CODE --
@@ -112,6 +142,11 @@ map.RandomMap()
 
 physarum.body_table[physarum.starting_position.x][physarum.starting_position.y] = "p"
 map.map_table[physarum.starting_position.x][physarum.starting_position.y] = "."
+
+results = CheckSurroundings("#")
+for k,v in ipairs(results) do
+	print(k, v)
+end
 
 function love.draw()
 	for i = 1, map.board_size.x do
