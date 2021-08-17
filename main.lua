@@ -106,18 +106,40 @@ ProcessNutrients = function()
 end
 
 ConsolidatePlasmodium = function()
+	-- go through the map, gathering the positions of where food overlaps with the physarum
 	local food_network = {}
 	
 	for i = 1, #food.location_table do
 		for j = 1, #food.location_table[i] do
-			if food.location_table[i][j] == "%" and (physarum.body_table[i][j] == "p" or physarum.body_table[i][j] == "~") then
-				local entry = {i, j}
+			if food.location_table[i][j][1] == "%" and (physarum.body_table[i][j] == "p" or physarum.body_table[i][j] == "~") then
+				local entry = {
+					x = i, 
+					y = j
+				}
 				table.insert(food_network, entry)
 			end
 		end
 	end
 
 	-- go through the food_network finding paths between entries
+	if #food_network % 2 == 0 then -- this will ultimately fail if the total number of food things is odd. but eh
+		for i = 1, #food_network, 2 do
+			local source = food_network[i]
+			local destination = food_network[i + 1]
+
+			direct_path = bresenham.line(source.x, source.y, destination.x, destination.y, "los")
+			for m = 1, #direct_path do
+				if direct_path[m + 1].map_tile == "#" then
+					for n = 1, #directions do
+						
+					end
+				end
+			end
+		end
+	end
+
+	-- clean up
+	food_network = nil
 end
 
 -- MAIN CODE --
@@ -158,6 +180,7 @@ function love.update(dt)
 	if global_timer >= 1 then
 		ExpandPlasmodium()
 		ProcessNutrients()
+		--ConsolidatePlasmodium()
 	end
 	global_timer = global_timer + 1 * dt
 end
