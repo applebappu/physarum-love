@@ -1,3 +1,5 @@
+bresenham = require "bresenham"
+
 love.window.setTitle("Physarum Polycephalum")
 
 math.randomseed(os.time() - (os.clock() * 1000))
@@ -11,12 +13,12 @@ physarum = {
 		x = math.random(15, 20),
 		y = math.random(15, 20)
 	},
-	energy = 30
+	energy = 18
 }
 
 food = {
 	location_table = {},
-	global_nutrition = 50
+	global_nutrition = 18
 }
 
 map = {
@@ -53,7 +55,7 @@ map = {
 
 directions = {
 	{-1, -1}, {0, -1}, {1, -1},
-	{-1, 0},  {0, 0},  {1, 0},
+	{-1, 0},  	   {1, 0},
 	{1, -1},  {0 , 1}, {1, 1}
 }
 
@@ -79,7 +81,8 @@ ExpandPlasmodium = function()
 					local a = i + target_x
 					local b = j + target_y
 
-					if map.map_table[a][b] == "." and physarum.energy > 0 and physarum.body_table[a][b] ~= "p" then
+					if map.map_table[a][b] == "." and physarum.energy > 0 and physarum.body_table[a][b] ~= "p" and physarum.body_table[a][b] ~= "~" then
+						physarum.body_table[i][j] = "~"
 						physarum.body_table[a][b] = "p"
 						physarum.energy = physarum.energy - 1
 					end
@@ -93,7 +96,7 @@ end
 ProcessNutrients = function()
 	for i = 2, (map.board_size.x - 1) do
 		for j = 2, (map.board_size.y - 1) do
-			if food.location_table[i][j][1] == "%" and physarum.body_table[i][j] == "p" then
+			if food.location_table[i][j][1] == "%" and (physarum.body_table[i][j] == "p" or physarum.body_table[i][j] == "~") then
 				physarum.energy = physarum.energy + 1
 				food.location_table[i][j][2] = food.location_table[i][j][2] - 1
 				global_timer = 0
@@ -103,7 +106,18 @@ ProcessNutrients = function()
 end
 
 ConsolidatePlasmodium = function()
+	local food_network = {}
 	
+	for i = 1, #food.location_table do
+		for j = 1, #food.location_table[i] do
+			if food.location_table[i][j] == "%" and (physarum.body_table[i][j] == "p" or physarum.body_table[i][j] == "~") then
+				local entry = {i, j}
+				table.insert(food_network, entry)
+			end
+		end
+	end
+
+	-- go through the food_network finding paths between entries
 end
 
 -- MAIN CODE --
@@ -124,13 +138,13 @@ function love.draw()
 			if food.location_table[i][j][1] == "%" then
 				love.graphics.setColor(0,0,0)
 				love.graphics.rectangle("fill",  i * map.tile_size,  j * map.tile_size, map.tile_size, map.tile_size)
-				if physarum.body_table[i][j] == "p" then
+				if physarum.body_table[i][j] == "p" or physarum.body_table[i][j] == "~" then
 					love.graphics.setColor(255/255, 255/255, 0/255)
 				else
 					love.graphics.setColor(218/255,165/255,32/255)
 				end
 				love.graphics.print("%", i * map.tile_size, j * map.tile_size)
-			elseif physarum.body_table[i][j] == "p" then
+			elseif physarum.body_table[i][j] == "p" or physarum.body_table[i][j] == "~" then
 				love.graphics.setColor(0,0,0)
 				love.graphics.rectangle("fill",  i * map.tile_size,  j * map.tile_size, map.tile_size, map.tile_size)
 				love.graphics.setColor(255/255, 255/255, 0/255)
