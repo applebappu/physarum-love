@@ -24,8 +24,8 @@ food = {
 map = {
 	map_table = {},
 	board_size = {
-		x = 38,
-		y = 28
+		x = 50,
+		y = 37
 	},
 	tiles = {"#","#",".",".",".",".",".","f","#","#"},
 	tile_size = 20,
@@ -56,7 +56,7 @@ map = {
 directions = {
 	{-1, -1}, {0, -1}, {1, -1},
 	{-1, 0},  	   {1, 0},
-	{1, -1},  {0 , 1}, {1, 1}
+	{-1, 1},  {0 , 1}, {1, 1}
 }
 
 global_timer = 0
@@ -108,6 +108,8 @@ end
 ConsolidatePlasmodium = function()
 	-- go through the map, gathering the positions of where food overlaps with the physarum
 	local food_network = {}
+	local ideal_path_list = {}
+	local ideal_path_entry = {}
 	
 	for i = 1, #food.location_table do
 		for j = 1, #food.location_table[i] do
@@ -131,15 +133,16 @@ ConsolidatePlasmodium = function()
 			for m = 1, #direct_path do
 				if direct_path[m + 1].map_tile == "#" then
 					for n = 1, #directions do
-						
+						-- try directions until we get a clear tile,
+						-- make that the new source, do another line
+						-- store these tiles in ideal_path_entry
 					end
 				end
 			end
 		end
 	end
 
-	-- clean up
-	food_network = nil
+	-- once we have a collection of ideal_path_entry items, find the path from each tile to the closest tile in the closest item and scrunch
 end
 
 -- MAIN CODE --
