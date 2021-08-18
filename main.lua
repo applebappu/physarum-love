@@ -105,50 +105,6 @@ ProcessNutrients = function()
 	end
 end
 
-FindFoodPaths = function()
-	-- go through the map, gathering the positions of where food overlaps with the physarum
-	local food_network = {}
-	local ideal_path_list = {}
-	local ideal_path_entry = {}
-	
-	for i = 1, #food.location_table do
-		for j = 1, #food.location_table[i] do
-			if food.location_table[i][j][1] == "%" and (physarum.body_table[i][j] == "p" or physarum.body_table[i][j] == "~") then
-				local entry = {
-					x = i, 
-					y = j
-				}
-				table.insert(food_network, entry)
-			end
-		end
-	end
-
-	-- go through the food_network finding paths between entries
-	if #food_network % 2 == 0 then -- this will ultimately fail if the total number of food things is odd. but eh
-		for i = 1, #food_network - 1, 2 do
-			local source = food_network[i]
-			local destination = food_network[i + 1]
-
-			direct_path = bresenham.line(source.x, source.y, destination.x, destination.y, "los")
-			for m = 1, #direct_path do
-				if direct_path[m + 1].map_tile == "#" then
-					for n = 1, #directions do
-						-- try directions until we get a clear tile,
-						-- make that the new source, do another line
-						-- store these tiles in ideal_path_entry
-					end
-				end
-			end
-		end
-	end
-end
-
-ConsolidatePlasmodium = function()
-	-- check "~" plasmodium tiles against the ideal food paths found in FindFoodPaths()
-	-- if on a path, turn them back into "p"
-	-- if not, remove them
-end
-
 -- MAIN CODE --
 InitMatrix(physarum.body_table)
 InitMatrix(food.location_table)
@@ -187,7 +143,6 @@ function love.update(dt)
 	if global_timer >= 1 then
 		ExpandPlasmodium()
 		ProcessNutrients()
-		--ConsolidatePlasmodium()
 	end
 	global_timer = global_timer + 1 * dt
 end
