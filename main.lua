@@ -105,7 +105,7 @@ ProcessNutrients = function()
 	end
 end
 
-ConsolidatePlasmodium = function()
+FindFoodPaths = function()
 	-- go through the map, gathering the positions of where food overlaps with the physarum
 	local food_network = {}
 	local ideal_path_list = {}
@@ -125,7 +125,7 @@ ConsolidatePlasmodium = function()
 
 	-- go through the food_network finding paths between entries
 	if #food_network % 2 == 0 then -- this will ultimately fail if the total number of food things is odd. but eh
-		for i = 1, #food_network, 2 do
+		for i = 1, #food_network - 1, 2 do
 			local source = food_network[i]
 			local destination = food_network[i + 1]
 
@@ -141,8 +141,12 @@ ConsolidatePlasmodium = function()
 			end
 		end
 	end
+end
 
-	-- once we have a collection of ideal_path_entry items, find the path from each tile to the closest tile in the closest item and scrunch
+ConsolidatePlasmodium = function()
+	-- check "~" plasmodium tiles against the ideal food paths found in FindFoodPaths()
+	-- if on a path, turn them back into "p"
+	-- if not, remove them
 end
 
 -- MAIN CODE --
