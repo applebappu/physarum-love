@@ -1,27 +1,13 @@
-PHYSARUM POLYCEPHALUM (WIP)
+PHYSARUM POLYCEPHALUM
 
-Physarum owns.  This is a simulation of their behavior, modeled on a grid.
+Well, not really.  I originally sought to emulate a lot more of the lifecycle and
+the pathfinding behavior, but when I got it all working I realized it was just a
+lot more interesting to watch without that stuff.
 
-It's a pathfinding experiment, but also physarum polycephalum is just
-really cool and I like them a lot.
+If you want to add pathfinding / plasmodial consolidation, you wanna put a lot less
+food on the board, and make the board absolutely huge.  Otherwise, it's just not
+that cool to look at, since the whole plasmodium becomes paths anyway.
+
+Calling this one done.
 
 - Jo
-
-Physarum life cycle (arbitrarily starting with mature plasmodium):
-1. mature plasmodium. expands, looks for nutrients, does cool stuff
-1a. if the habitat is too dry, becomes a sclerotia (waits for moisture)
-2. under stress, sporangia formation begins
-3. young sporangium
-4. the mature sporangium releases spores (at which point, the physarum is considered haploid)
-5. when the spore lands and germinates, it releases cells
-5a. if cell hits nutrients, it becomes ameoboid initially (then flagellates)
-5b. if not, it grows flagella and looks for nutrients initially (then ameoba....ates?)
-6. when 2 flagellated cells find each other, they fuse cytoplasma and fertilize each other
-7. fused fertilized cells are a zygote (and the physarum becomes diploid again)
-8. the zygote feeds and develops into a young plasmodium
-9. young plasmodium becomes mature plasmodium with time/nutrients
-
-In terms of simplified simulation:
-1. the plasmodium, goes around until it runs out of food
-2. the spores, move randomly for a while then burst, spawning entities
-3. the moving entities, which make new plasmodium when they meet if they have enough energy
